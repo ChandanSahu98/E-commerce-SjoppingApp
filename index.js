@@ -23,7 +23,7 @@ const cartRoutes = require('./routes/cartRoutes');
 
 const dburl = process.env.DB_URL || "mongodb://127.0.0.1:27017/shopping-app-DB"
 
-const connectDB = ()=>{
+const connectDB = async() => {
     mongoose
     .connect(dburl)
     .then(() => console.log("Connected with MongoDB"))
@@ -84,11 +84,11 @@ app.use(authRoutes);
 app.use(cartRoutes);
 
 
-connectDB.then(()=>{
+connectDB().then( () => {
   app.listen(PORT, ()=>{
     console.log("listening for requests");
-  })
-});
+  });
+}).catch((err) => console.log(err));
 
 // app.listen(PORT,()=>{
 //   console.log(`server started at port ${PORT}`);
