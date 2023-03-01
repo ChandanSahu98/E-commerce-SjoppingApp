@@ -13,6 +13,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/User');
 const MongoStore = require('connect-mongo');
+const PORT = process.env.PORT || 3000;
 
 //Routes
 const authRoutes = require('./routes/authRoutes');
@@ -22,10 +23,13 @@ const cartRoutes = require('./routes/cartRoutes');
 
 const dburl = process.env.DB_URL || "mongodb://127.0.0.1:27017/shopping-app-DB"
 
-mongoose
-  .connect(dburl)
-  .then(() => console.log("Connected with MongoDB"))
-  .catch((err) => console.log(err));
+const connectDB = ()=>{
+    mongoose
+    .connect(dburl)
+    .then(() => console.log("Connected with MongoDB"))
+    .catch((err) => console.log(err));
+}
+
 
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
@@ -79,7 +83,13 @@ app.use(reviewRoutes);
 app.use(authRoutes);
 app.use(cartRoutes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT,()=>{
-  console.log(`server started at port ${PORT}`);
+
+connectDB.then(()=>{
+  app.listen(PORT, ()=>{
+    console.log("listening for requests");
+  })
 });
+
+// app.listen(PORT,()=>{
+//   console.log(`server started at port ${PORT}`);
+// });
